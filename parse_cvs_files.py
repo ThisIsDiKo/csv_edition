@@ -1,0 +1,50 @@
+import csv
+
+filenames = [
+    '2018 180D1.csv',
+    '2019 180D1.csv',
+    '2020 180D1.csv'
+]
+
+for filename in filenames:
+    print(filename)
+    data = []
+    with open(filename) as csvfile:
+        spamreader = csv.reader(csvfile, delimiter=';')
+        t = []
+        for row in spamreader:
+            print(', '.join(row))
+            t.append(row)
+
+        for i in range(4, len(t[0]), 3):
+            print('week: {0} {1} {2}'.format(int(i/3), t[3][i-1], t[3][i]))
+            slice = []
+            slice.append(int(i/3))
+            if t[3][i - 2] == '':
+                slice.append('0')
+            else:
+                slice.append(t[3][i - 2])
+
+            if t[3][i - 1] == '':
+                slice.append('0')
+            else:
+                slice.append(t[3][i - 1])
+
+            if t[3][i] == '':
+                slice.append('0')
+            else:
+                slice.append(t[3][i])
+
+            data.append(slice)
+
+    cols = ['week', 'income', 'expense', 'balance']
+    data.insert(0, cols)
+    for slice in data:
+        print(slice)
+
+
+    f_name = '{0}.csv'.format(filename.split('.')[0]+'_formatted')
+
+    with open(f_name, 'w') as file:
+        writer = csv.writer(file, lineterminator="\r")
+        writer.writerows(data)
